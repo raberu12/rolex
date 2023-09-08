@@ -16,9 +16,13 @@ public class Rolex {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        MyTime t = new MyTime(1, 0, 59, true);
-        
-        t.tickBySecond();
+        MyTime t = new MyTime(1, 0, 60, false);
+//        t.tickBySecond();
+//        t.tickByMinute();
+//        t.tickByHour();
+//        t.tickByHour();
+//        t.tickByHour();
+//        t.advanceTime(30);
         t.displayTime12();
         t.displayTime24();
     }

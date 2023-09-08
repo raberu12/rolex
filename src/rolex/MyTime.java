@@ -17,9 +17,9 @@ public class MyTime {
     private boolean meridian = true;
 
     public MyTime(int hours, int minutes, int seconds, boolean meridian) {
-        this.hours = hours;
-        this.minutes = minutes;
-        this.seconds = seconds;
+        this.hours = hours > 12 ? 0 : hours;
+        this.minutes = minutes >= 60 ? 0 : minutes;
+        this.seconds = seconds >= 60 ? 0 : seconds;
         this.meridian = meridian;
     }
 
@@ -47,7 +47,7 @@ public class MyTime {
         this.seconds = seconds;
     }
 
-    public String isMeridian() {
+    public String getMeridian() {
         return meridian ? "PM" : "AM";
     }
 
@@ -56,44 +56,47 @@ public class MyTime {
     }
 
     public void advanceTime(int seconds) {
-
+        for (int i = 0; i < seconds; i++) {
+            tickBySecond();
+        }
     }
 
     public void tickBySecond() {
-        
-        if(seconds > 59){
-            seconds -= 60;
-            minutes += 1;
-        }else{
-            seconds++;
+        this.seconds++;
+        if (this.seconds >= 60) {
+            this.seconds = 0;
+            tickByMinute();
         }
-        
     }
 
-    public void tickbyMinute() {
-
+    public void tickByMinute() {
+        this.minutes++;
+        if (this.minutes >= 60) {
+            this.minutes = 0;
+            tickByHour();
+        }
     }
 
-    public void tickbyHour() {
-
+    public void tickByHour() {
+        this.hours++;
+        if (this.hours >= 12) {
+            this.hours -= 12;
+            meridian = !meridian;
+        }
     }
 
     public void displayTime12() {
-        System.out.printf("%02d:%02d:%02d %s\n", hours, minutes, seconds, isMeridian());
+        int displayHours = (hours == 0 || hours == 12) ? 12 : hours % 12;
+        System.out.printf("%02d:%02d:%02d %s\n", displayHours, minutes, seconds, getMeridian());
     }
 
     public void displayTime24() {
-        if(hours > 11){
-            hours = 0;
-            System.out.printf("%02d:%02d:%02d\n", hours, minutes, seconds);
-        }else{
-            System.out.printf("%02d:%02d:%02d\n", hours + 12, minutes, seconds);
-        }
+        System.out.printf("%02d:%02d:%02d\n", !meridian ? (hours % 12) : 12 + (hours % 12), minutes, seconds);
     }
 
     @Override
     public String toString() {
-        return super.toString(); //To change body of generated methods, choose Tools | Templates.
+        return String.format("%02d:%02d:%02d %s", hours, minutes, seconds, getMeridian());
     }
 
 }
